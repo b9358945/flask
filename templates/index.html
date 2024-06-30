@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webhacking.kr</title>
+<link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+<style>
+    /* 테이블 */
+    .table-container {
+        width: 90%;
+        overflow-x: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 60px auto 20px; /* 상단바 높이만큼 여백 추가 */
+    }
+    .table-container table tr.specialtable td {
+        border: none; /* 특정 테이블 행의 border 제거 */
+    }
+
+    .table-container table {
+        border-collapse: collapse; /* 테이블 테두리 합병 설정 */
+    }
+    .table-container table tr {
+        border: none; /* 테이블의 모든 행에 있는 border 제거 */
+    }
+    table {
+        border-collapse: collapse;
+        font-size: medium;
+        text-align: center;
+        height: 10px;
+    }
+    th {
+        text-align: center;
+        font-weight: bold;
+        background-color: #f2f2f2;
+        line-height: 0.4;
+    }
+    td {
+        text-align: center;
+        line-height: 0.4;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    /* 페이지네이션 */
+    .pagination {
+        text-align: center;
+        list-style-type: none;
+        padding: 0;
+        margin: 20px auto; /* 페이지네이션과 테이블 사이 여백 */
+        position: fixed; /* 페이지네이션 고정 */
+        bottom: 0; /* 화면 하단에 위치 */
+        left: 50%; /* 중앙 정렬을 위해 추가 */
+        transform: translateX(-50%); /* 중앙 정렬 */
+        background-color: #fff; /* 페이지네이션 배경색 설정 */
+        z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
+    }
+    .pagination li {
+        display: inline-block;
+    }
+    .h3 {
+        font-size: 1.75rem;
+        margin-top: 0;
+        margin-bottom: .5rem;
+        font-weight: 500;
+        line-height: 1.2;
+        text-align: left;
+    }
+    /* body */
+    body {
+        font-family: 'Noto Sans KR', sans-serif, 'Segoe UI Emoji', 'Noto Color Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'EmojiSymbols', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        margin: 0; /* body의 기본 마진 제거 */
+    }
+    /* 상단 메뉴바 */
+    .menu {
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    background-color: #212529;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0; /* 왼쪽 끝에 고정 */
+    z-index: 1000;
+    border-bottom: none; /* 바로 밑에 있는 border 제거 */
+    }
+
+    .menu nav {
+        width: 100%; /* 너비를 100%로 설정하여 전체 너비를 차지하도록 함 */
+    }
+
+    .menu nav ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+        display: flex; /* 메뉴 항목을 수평으로 배치 */
+        justify-content: flex-start; /* 왼쪽으로 정렬 */
+    }
+
+    .menu nav ul li {
+        margin-right: 0px; /* 각 메뉴 항목 사이의 간격 설정 */
+    }
+
+    .menu nav ul li:last-child {
+        margin-right: 0; /* 마지막 메뉴 항목의 간격은 없앰 */
+    }
+
+    .menu nav ul li a {
+        line-height: 50px; /* 세로 중앙 정렬 */
+        height: 50px;
+        padding: 0 15px; /* 내부 여백 설정 */
+        text-decoration: none;
+        color: #888; /* 기본 회색 글씨 색상 */
+        transition: color 0.3s ease; /* 색상 변화에 트랜지션 효과 추가 */
+        font-size: 18px; /* 글씨 크기 설정 */
+    }
+    .menu nav ul li a.active {
+        color: white; /* 선택된 메뉴 글씨색을 흰색으로 변경 */
+        font-weight: bold; /* 선택된 메뉴 글씨를 볼드체로 변경 */
+        /* 다른 스타일 추가 가능 */
+}
+    .menu nav ul li a:hover,
+    .menu nav ul li a.active {
+        color: white; /* 선택했을 때나 호버 시 흰색 글씨로 변경 */
+    }
+
+</style>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="menu">
+        <nav>
+            <ul>
+                <li><a href="http://127.0.0.1:9999">Home</a></li>
+                <li><a href="">Challenge</a></li>
+                <li><a href="">Ranking</a></li>
+                <li><a href="">Hall of Fame</a></li>
+                <li><a href="">Contact</a></li>
+            </ul>
+            <a id="pull" href="#"></a>
+        </nav>
+    </div>
+
+    <div class="table-container">
+        <table class="table">
+            <tr class="specialtable">
+                <td colspan="5"><p class="h3">😎</p></td>
+            </tr>
+            <tr class="header">
+                <th>#</th>
+                <th>Name</th>
+                <th>Score</th>
+                <th>Comment</th>
+                <th>Lastauth</th>
+            </tr>
+            <tbody>
+                {% for x in data %}
+                <tr>
+                    <td>
+                        {% if x[0] == 1 %}
+                            &#129351; <!-- Gold Medal -->
+                        {% elif x[0] == 2 %}
+                            &#129352; <!-- Silver Medal -->
+                        {% elif x[0] == 3 %}
+                            &#129353; <!-- Bronze Medal -->
+                        {% else %}
+                            {{ x[0]|string }}  <!-- 숫자를 문자열로 변환 -->
+                        {% endif %}
+                    </td>
+                    <td>{{ x[1] }}</td>
+                    <td>{{ x[2] }}</td>
+                    <td>
+                        {{ x[3]|safe }}
+                    </td>
+                    <td>{{ x[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div>
+    {% if pagination %}
+        <ul class="pagination">
+            {% for page_num in range(1, pagination.total_pages + 1) %}
+                {% if page_num != pagination.page %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item active">
+                        <a class="page-link" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+    </div>
+</body>
+</html>
