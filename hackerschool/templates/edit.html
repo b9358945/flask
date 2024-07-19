@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 수정</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>게시글 수정</h2>
+        <!-- 수정 폼 -->
+        <form action="{{ url_for('edit', post_id=post[0]) }}" method="post">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input id="name" name="name" class="form-control" value="{{ post[1] }}" required readonly>
+                <!-- readonly 속성으로 name 필드를 수정할 수 없도록 함 -->
+            </div>
+            <div class="form-group">
+                <label for="score">Score</label>
+                <input type="number" id="score" name="score" class="form-control" value="{{ post[2] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="comment">Comment</label>
+                <textarea id="comment" name="comment" class="form-control" required>{{ post[3] }}</textarea>
+            </div>
+            
+            <!-- 수정 및 삭제 버튼을 수평으로 배치 -->
+            <div class="d-flex justify-content-between">
+
+                <!-- 수정 버튼 -->
+                <button type="submit" formaction="{{ url_for('edit', post_id=post[0]) }}" class="btn btn-primary">수정</button>
+            </div>
+        </form>
+        <!-- 삭제 폼 -->
+        <form action="{{ url_for('delete') }}" method="post">
+            <input type="hidden" name="name" value="{{ post[1] }}">
+            <button type="submit" class="btn btn-danger">삭제</button>
+        </form>
+    </div>
+</body>
+</html>
